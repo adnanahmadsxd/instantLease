@@ -9,8 +9,8 @@ import {
 import { app } from "../firebase";
 import {
   updateUserStart,
-  updateUserSuccess,
   updateUserFailure,
+  updateUserSuccess,
 } from "../redux/user/userslice";
 import { useDispatch } from "react-redux";
 
@@ -20,12 +20,9 @@ export default function Profile() {
   const [file, setFile] = useState(undefined);
   const [filePerc, setFilePerc] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
-  // console.log(filePerc);
-  // console.log(file);
   const [formData, setFormData] = useState({});
-  const [updateSuccess, setUpdateSuccess] = useState(false);
-  // console.log(formData)
-  const dispatch = useDispatch();
+  const [updateSuccess, setUpdateSuccess]= useState(false);
+  const dispatch= useDispatch();
 
   useEffect(() => {
     if (file) {
@@ -65,18 +62,20 @@ export default function Profile() {
     e.preventDefault();
     try {
       dispatch(updateUserStart());
-      const res = await fetch(`/api/user/update/${currentUser._id}`, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json",
+      const res= await fetch(`/api/user/update/${currentUser._id}`, {
+
+        method:'POST',
+        headers:{
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
-      if (data.success === false) {
+      const data= await res.json();
+      if(data.success=== false){
         dispatch(updateUserFailure(data.message));
         return;
       }
+
       dispatch(updateUserSuccess(data));
       setUpdateSuccess(true);
     } catch (error) {
@@ -108,7 +107,7 @@ export default function Profile() {
               Error Image upload (image must be less than 2MB)
             </span>
           ) : filePerc > 0 && filePerc < 100 ? (
-            <span className="text-green-700">{`Uploading ${filePerc}%`}</span>
+            <span className="text-green-700">{`Uploading ${filePerc}`}</span>
           ) : filePerc === 100 ? (
             <span className="text-green-700">Image Successfully Uploaded</span>
           ) : (
@@ -119,16 +118,16 @@ export default function Profile() {
           type="text"
           id="username"
           placeholder="username"
-          defaultValue={currentUser.username}
           className="border p-3 rounded-lg"
+          defaultValue={currentUser.username}
           onChange={handleChange}
         />
         <input
           type="email"
           id="email"
           placeholder="email"
-          defaultValue={currentUser.email}
           className="border p-3 rounded-lg"
+          defaultValue={currentUser.email}
           onChange={handleChange}
         />
         <input
@@ -138,11 +137,8 @@ export default function Profile() {
           className="border p-3 rounded-lg"
           onChange={handleChange}
         />
-        <button
-          disabled={loading}
-          className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80"
-        >
-          {loading ? "loading..." : "Update"}
+        <button disabled={loading} className="bg-slate-700 text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
+          {loading ? 'Loading...' : 'Update'}
         </button>
       </form>
 
@@ -150,11 +146,8 @@ export default function Profile() {
         <span className="text-red-700 cursor-pointer">Delete Account</span>
         <span className="text-red-700 cursor-pointer">Sign Out</span>
       </div>
-
-      <p className="text-red-700 mt-5">{error ? error : ""}</p>
-      <p className="text-green-700 mt-5">
-        {updateSuccess ? "User is updated successfully!" : ""}
-      </p>
+      <p className="text-red-700 mt-5">{error ? error : ''}</p>
+      <p className="text-green-700 mt-5">{updateSuccess ? 'User is updated!' : ''}</p>
     </div>
   );
 }
